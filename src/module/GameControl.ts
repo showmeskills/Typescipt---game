@@ -68,13 +68,35 @@ class GameControl{
                 break;
             
             } 
-            //修改蛇的X和Y的值
-                this.snake.X = X;
-                this.snake.Y = Y;
+
+            //检查蛇吃到食物
+            this.checkEat(X,Y)
+
+            try{
+                //修改蛇的X和Y的值
+                    this.snake.X = X;
+                    this.snake.Y = Y;
+            }catch (error) {
+                //进入到catch,说明蛇撞墙了,游戏结束
+                alert(error.message+'Game Over')
+                //设置isLive false
+                this.isLive = false
+            }
 
             //定时器,因为是递归,所以每次调用自动调用this.run
             this.isLive && setTimeout(this.run.bind(this),300 - (this.scorePanel.level-1)*30)
     }
+
+    //定义一个方法,用来检查蛇是否吃到食物
+    checkEat(X:number,Y: number){
+         if(X === this.food.getX() && Y === this.food.getY()){
+              //检查蛇是否吃到食物
+            this.food.change()
+            this.scorePanel.addScore();
+            this.snake.addBody();
+         }
+    }
+
 }
 
 export default GameControl
